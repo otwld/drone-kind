@@ -49,6 +49,7 @@ trigger:
   branch:
    - main
 
+#
 steps:
   - name: publish docker plugin image
     image: plugins/docker
