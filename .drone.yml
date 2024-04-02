@@ -7,13 +7,6 @@ trigger:
     - pull_request
 
 steps:
-  - name: dind
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
-    detach: true
 
   - name: install kind and kubectl
     image: ubuntu:latest
@@ -32,8 +25,6 @@ steps:
     volumes:
       - name: cache
         path: /usr/local/bin
-      - name: dockersock
-        path: /var/run
     commands:
       - kubectl version --client=true
       - kind version
@@ -47,8 +38,6 @@ steps:
 volumes:
   - name: cache
     temp: {}
-  - name: dockersock
-    temp: {}
 
 ---
 kind: pipeline
@@ -61,7 +50,6 @@ trigger:
   branch:
    - main
 
-##
 steps:
   - name: publish docker plugin image
     image: plugins/docker

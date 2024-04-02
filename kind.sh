@@ -42,23 +42,16 @@ main() {
         x86_64)             arch="amd64" ;;
         arm|aarch64|arm64)  arch="arm64" ;;
     esac
-    local cache_dir="${install_dir}/kind/${version}/${arch}"
 
-    local kind_dir="${cache_dir}/kind/bin/"
     if [[ ! -x "${install_dir}/kind" ]]; then
         install_kind
     fi
 
-    echo 'Adding kind directory to PATH...'
-    # export PATH="$kind_dir:$PATH"
-
-    local kubectl_dir="${cache_dir}/kubectl/bin/"
     if [[ ! -x "${install_dir}/kubectl" ]]; then
         install_kubectl
     fi
 
-    echo 'Adding kubectl directory to PATH...'
-    # export PATH="$kubectl_dir:$PATH"
+    echo 'Adding kubectl and kind directory to PATH...'
     export PATH="install_dir:$PATH"
 
     "${install_dir}/kind" version
@@ -72,16 +65,12 @@ main() {
 install_kind() {
     echo 'Installing kind...'
 
-    #mkdir -p "${kind_dir}"
-
     curl -sSLo "${install_dir}/kind" "https://github.com/kubernetes-sigs/kind/releases/download/${version}/kind-linux-${arch}"
     chmod +x "${install_dir}/kind"
 }
 
 install_kubectl() {
     echo 'Installing kubectl...'
-
-    #mkdir -p "${kubectl_dir}"
 
     curl -sSLo "${install_dir}/kubectl" "https://storage.googleapis.com/kubernetes-release/release/${kubectl_version}/bin/linux/${arch}/kubectl"
     chmod +x "${install_dir}/kubectl"
