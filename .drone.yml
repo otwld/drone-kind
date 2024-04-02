@@ -24,6 +24,8 @@ steps:
     volumes:
       - name: cache
         path: /usr/local/bin
+      - name: dockersock
+        path: /var/run
     commands:
       - kind version
       - kubectl version --client=true
@@ -37,7 +39,17 @@ steps:
 volumes:
   - name: cache
     temp: {}
+  - name: dockersock
+    temp: {}
 
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+    - name: dockersock
+      path: /var/run
 ---
 kind: pipeline
 type: docker
