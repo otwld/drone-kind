@@ -1,0 +1,72 @@
+kind: pipeline
+type: docker
+name: tests
+
+trigger:
+  event:
+    - pull_request
+
+steps:
+  - name: install kind and kubectl
+    image: ubuntu:latest
+    volumes:
+      - name: cache
+        path: /usr/local/bin
+    environment:
+      PLUGIN_INSTALL_DIR: "/usr/local/bin"
+      PLUGIN_INSTALL_ONLY: true
+    commands:
+      - apt-get -y update; apt-get -y install curl git
+      - ./kind.sh
+
+  - name: check script installation
+    image: ubuntu:latest
+    volumes:
+      - name: cache
+        path: /usr/local/bin
+    commands:
+      - kind version
+      - kubectl version --client=true
+
+  - name: build docker plugin image
+    image: plugins/docker
+    settings:
+      repo: otwld/drone-kind
+      dry_run: true
+
+volumes:
+  - name: cache
+    temp: {}
+
+---
+kind: pipeline
+type: docker
+name: publish
+
+trigger:
+  event:
+  - promote
+  branch:
+   - main
+
+steps:
+  - name: publish docker plugin image
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_hub_username
+      password:
+        from_secret: docker_hub_password
+      repo: otwld/drone-kind
+      force_tag: true
+      tags:
+        - latest
+
+  - name: publish release
+    image: plugins/github-release
+    settings:
+      overwrite: true
+      title: 'drone-kind'
+      api_key:
+        from_secret: github_access_token
+      files: kind.sh
