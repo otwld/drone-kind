@@ -27,7 +27,7 @@ main() {
     local version="${PLUGIN_VERSION:-$DEFAULT_KIND_VERSION}"
     local config="$PLUGIN_CONFIG"
     local node_image="$PLUGIN_NODE_IMAGE"
-    local install_dir="${PLUGIN_INSTALL_DIR:-/var/tmp}"
+    local install_dir="${PLUGIN_INSTALL_DIR:-/usr/local/bin}"
     local cluster_name="${PLUGIN_CLUSTER_NAME:-$DEFAULT_CLUSTER_NAME}"
     local wait="${PLUGIN_WAIT:-$DEFAULT_WAIT}"
     local verbosity=$PLUGIN_VERBOSE
@@ -92,7 +92,7 @@ create_kind_cluster() {
         args+=("--verbosity=${verbosity}")
     fi
 
-    "${kind_dir}/kind" "${args[@]}"
+    "${install_dir}/kind" "${args[@]}"
 }
 
 main
