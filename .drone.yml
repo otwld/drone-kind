@@ -19,6 +19,14 @@ steps:
       - apt-get -y update; apt-get -y install curl git
       - ./kind.sh
 
+  - name: dind
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+    detach: true
+
   - name: check script installation
     image: ubuntu:latest
     volumes:
@@ -42,14 +50,6 @@ volumes:
   - name: dockersock
     temp: {}
 
-
-services:
-  - name: docker
-    image: docker:dind
-    privileged: true
-    volumes:
-    - name: dockersock
-      path: /var/run
 ---
 kind: pipeline
 type: docker
