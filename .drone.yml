@@ -7,6 +7,7 @@ trigger:
     - pull_request
 
 steps:
+
   - name: install kind and kubectl
     image: ubuntu:latest
     volumes:
@@ -25,8 +26,8 @@ steps:
       - name: cache
         path: /usr/local/bin
     commands:
-      - kind version
       - kubectl version --client=true
+      - kind version
 
   - name: build docker plugin image
     image: plugins/docker

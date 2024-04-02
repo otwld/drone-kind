@@ -15,7 +15,6 @@
 # limitations under the License.
 
 set -o errexit
-set -o nounset
 set -o pipefail
 
 DEFAULT_KIND_VERSION=v0.21.0
@@ -25,14 +24,14 @@ DEFAULT_WAIT=60s
 
 
 main() {
-    local version="${PLUGIN_VERSION:-DEFAULT_KIND_VERSION}"
-    local config=$PLUGIN_CONFIG
-    local node_image=$PLUGIN_NODE_IMAGE
+    local version="${PLUGIN_VERSION:-$DEFAULT_KIND_VERSION}"
+    local config="$PLUGIN_CONFIG"
+    local node_image="$PLUGIN_NODE_IMAGE"
     local install_dir="${PLUGIN_INSTALL_DIR:-/var/tmp}"
-    local cluster_name="${PLUGIN_CLUSTER_NAME:-DEFAULT_CLUSTER_NAME}"
-    local wait="${PLUGIN_WAIT:-DEFAULT_WAIT}"
+    local cluster_name="${PLUGIN_CLUSTER_NAME:-$DEFAULT_CLUSTER_NAME}"
+    local wait="${PLUGIN_WAIT:-$DEFAULT_WAIT}"
     local verbosity=$PLUGIN_VERBOSE
-    local kubectl_version="${PLUGIN_KUBECTL_VERSION:-DEFAULT_KUBECTL_VERSION}"
+    local kubectl_version="${PLUGIN_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}"
     local install_only=$PLUGIN_INSTALL_ONLY
 
 
@@ -43,28 +42,22 @@ main() {
         x86_64)             arch="amd64" ;;
         arm|aarch64|arm64)  arch="arm64" ;;
     esac
-    local cache_dir="${install_dir}/kind/${version}/${arch}"
 
-    local kind_dir="${cache_dir}/kind/bin/"
-    if [[ ! -x "${kind_dir}/kind" ]]; then
+    if [[ ! -x "${install_dir}/kind" ]]; then
         install_kind
     fi
 
-    echo 'Adding kind directory to PATH...'
-    export PATH="$kind_dir:$PATH"
-
-    local kubectl_dir="${cache_dir}/kubectl/bin/"
-    if [[ ! -x "${kubectl_dir}/kubectl" ]]; then
+    if [[ ! -x "${install_dir}/kubectl" ]]; then
         install_kubectl
     fi
 
-    echo 'Adding kubectl directory to PATH...'
-    export PATH="$kubectl_dir:$PATH"
+    echo 'Adding kubectl and kind directory to PATH...'
+    export PATH="install_dir:$PATH"
 
-    "${kind_dir}/kind" version
-    "${kubectl_dir}/kubectl" version --client=true
+    "${install_dir}/kind" version
+    "${install_dir}/kubectl" version --client=true
 
-    if [[ -n "${install_only}" ]]; then
+    if [[ -z "${install_only}" ]]; then
       create_kind_cluster
     fi
 }
@@ -72,19 +65,15 @@ main() {
 install_kind() {
     echo 'Installing kind...'
 
-    mkdir -p "${kind_dir}"
-
-    curl -sSLo "${kind_dir}/kind" "https://github.com/kubernetes-sigs/kind/releases/download/${version}/kind-linux-${arch}"
-    chmod +x "${kind_dir}/kind"
+    curl -sSLo "${install_dir}/kind" "https://github.com/kubernetes-sigs/kind/releases/download/${version}/kind-linux-${arch}"
+    chmod +x "${install_dir}/kind"
 }
 
 install_kubectl() {
     echo 'Installing kubectl...'
 
-    mkdir -p "${kubectl_dir}"
-
-    curl -sSLo "${kubectl_dir}/kubectl" "https://storage.googleapis.com/kubernetes-release/release/${kubectl_version}/bin/linux/${arch}/kubectl"
-    chmod +x "${kubectl_dir}/kubectl"
+    curl -sSLo "${install_dir}/kubectl" "https://storage.googleapis.com/kubernetes-release/release/${kubectl_version}/bin/linux/${arch}/kubectl"
+    chmod +x "${install_dir}/kubectl"
 }
 
 create_kind_cluster() {
