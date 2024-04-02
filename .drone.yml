@@ -35,8 +35,8 @@ steps:
       - name: dockersock
         path: /var/run
     commands:
-      - kind version
       - kubectl version --client=true
+      - kind version
 
   - name: build docker plugin image
     image: plugins/docker
