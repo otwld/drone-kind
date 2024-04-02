@@ -63,7 +63,7 @@ main() {
     "${kind_dir}/kind" version
     "${kubectl_dir}/kubectl" version --client=true
 
-    if [[ -n "${install_only}" ]]; then
+    if [[ -z "${install_only}" ]]; then
       create_kind_cluster
     fi
 }
