@@ -24,14 +24,14 @@ DEFAULT_WAIT=60s
 
 
 main() {
-    local version="${PLUGIN_VERSION:-DEFAULT_KIND_VERSION}"
+    local version="${PLUGIN_VERSION:-$DEFAULT_KIND_VERSION}"
     local config="$PLUGIN_CONFIG"
     local node_image="$PLUGIN_NODE_IMAGE"
     local install_dir="${PLUGIN_INSTALL_DIR:-/var/tmp}"
-    local cluster_name="${PLUGIN_CLUSTER_NAME:-DEFAULT_CLUSTER_NAME}"
-    local wait="${PLUGIN_WAIT:-DEFAULT_WAIT}"
+    local cluster_name="${PLUGIN_CLUSTER_NAME:-$DEFAULT_CLUSTER_NAME}"
+    local wait="${PLUGIN_WAIT:-$DEFAULT_WAIT}"
     local verbosity=$PLUGIN_VERBOSE
-    local kubectl_version="${PLUGIN_KUBECTL_VERSION:-DEFAULT_KUBECTL_VERSION}"
+    local kubectl_version="${PLUGIN_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}"
     local install_only=$PLUGIN_INSTALL_ONLY
 
 
