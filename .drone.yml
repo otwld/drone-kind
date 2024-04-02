@@ -14,10 +14,9 @@ steps:
       - name: cache
         path: /usr/local/bin
     environment:
-      PLUGIN_INSTALL_DIR: "/usr/local/bin"
       PLUGIN_INSTALL_ONLY: true
     commands:
-      - apt-get -y update; apt-get -y install curl git
+      - apt-get -y update; apt-get -y install curl
       - ./kind.sh
 
   - name: check script installation
