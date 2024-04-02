@@ -26,8 +26,8 @@ DEFAULT_WAIT=60s
 
 main() {
     local version="${PLUGIN_VERSION:-DEFAULT_KIND_VERSION}"
-    local config=$PLUGIN_CONFIG
-    local node_image=$PLUGIN_NODE_IMAGE
+    local config="$PLUGIN_CONFIG"
+    local node_image="$PLUGIN_NODE_IMAGE"
     local install_dir="${PLUGIN_INSTALL_DIR:-/var/tmp}"
     local cluster_name="${PLUGIN_CLUSTER_NAME:-DEFAULT_CLUSTER_NAME}"
     local wait="${PLUGIN_WAIT:-DEFAULT_WAIT}"
