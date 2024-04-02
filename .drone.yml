@@ -7,6 +7,14 @@ trigger:
     - pull_request
 
 steps:
+  - name: dind
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+    detach: true
+
   - name: install kind and kubectl
     image: ubuntu:latest
     volumes:
@@ -18,14 +26,6 @@ steps:
     commands:
       - apt-get -y update; apt-get -y install curl git
       - ./kind.sh
-
-  - name: dind
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
-    detach: true
 
   - name: check script installation
     image: ubuntu:latest
