@@ -71,4 +71,5 @@ steps:
         from_secret: github_access_token
       files: kind.sh
     when:
-      - tag
+      event:
+        - tag
