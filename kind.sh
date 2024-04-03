@@ -33,6 +33,7 @@ main() {
     local verbosity=$PLUGIN_VERBOSE
     local kubectl_version="${PLUGIN_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}"
     local install_only=$PLUGIN_INSTALL_ONLY
+    local clean_only=$PLUGIN_CLEAN_ONLY
 
 
     local arch
@@ -57,8 +58,12 @@ main() {
     "${install_dir}/kind" version
     "${install_dir}/kubectl" version --client=true
 
-    if [[ -z "${install_only}" ]]; then
+    if [[ -z "${install_only}"]] && [[ -z "${clean_only}" ]]; then
       create_kind_cluster
+    fi
+
+    if [[ -n "${clean_only}" ]]; then
+      delete_cluster
     fi
 }
 
@@ -91,6 +96,14 @@ create_kind_cluster() {
     if [[ -n "${verbosity}" ]]; then
         args+=("--verbosity=${verbosity}")
     fi
+
+    "${install_dir}/kind" "${args[@]}"
+}
+
+delete_cluster() {
+    echo 'Deleting kind cluster...'
+    local args=(delete cluster "--name=${cluster_name}")
+
 
     "${install_dir}/kind" "${args[@]}"
 }
