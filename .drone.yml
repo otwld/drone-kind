@@ -7,7 +7,6 @@ trigger:
     - pull_request
 
 steps:
-
   - name: install kind and kubectl
     image: ubuntu:latest
     volumes:
@@ -45,9 +44,9 @@ name: publish
 
 trigger:
   event:
-  - promote
+    - promote
   branch:
-   - main
+    - main
 
 steps:
   - name: publish docker plugin image
@@ -72,4 +71,4 @@ steps:
       files: kind.sh
     when:
       event:
-      - tag
+        - tag
