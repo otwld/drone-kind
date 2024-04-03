@@ -72,4 +72,4 @@ steps:
       files: kind.sh
     when:
       event:
-        - tag
+      - tag
