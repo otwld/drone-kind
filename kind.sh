@@ -21,6 +21,7 @@ DEFAULT_KIND_VERSION=v0.21.0
 DEFAULT_CLUSTER_NAME=default-kind
 DEFAULT_KUBECTL_VERSION=v1.28.6
 DEFAULT_WAIT=60s
+DEFAULT_HOSTNAME=kubernetes
 
 
 main() {
@@ -34,6 +35,7 @@ main() {
     local kubectl_version="${PLUGIN_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}"
     local install_only=$PLUGIN_INSTALL_ONLY
     local clean_only=$PLUGIN_CLEAN_ONLY
+    local hostname="${PLUGIN_HOSTNAME:-$DEFAULT_HOSTNAME}"
 
 
     local arch
@@ -98,6 +100,9 @@ create_kind_cluster() {
     fi
 
     "${install_dir}/kind" "${args[@]}"
+
+    echo 'Set hostname to: ${hostname}'
+    sed -i -e "s/0.0.0.0/${hostname}/g" "$HOME/.kube/config"
 }
 
 delete_cluster() {
