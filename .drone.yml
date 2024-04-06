@@ -60,15 +60,3 @@ steps:
       force_tag: true
       tags:
         - latest
-
-  - name: publish release
-    image: plugins/github-release
-    settings:
-      overwrite: true
-      title: 'drone-kind'
-      api_key:
-        from_secret: github_access_token
-      files: kind.sh
-    when:
-      event:
-        - tag
