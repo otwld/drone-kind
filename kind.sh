@@ -22,11 +22,12 @@ DEFAULT_CLUSTER_NAME=default-kind
 DEFAULT_KUBECTL_VERSION=v1.28.6
 DEFAULT_WAIT=60s
 DEFAULT_HOSTNAME=kubernetes
+DEFAULT_CONFIG=/root/kind-config.yml
 
 
 main() {
     local version="${PLUGIN_VERSION:-$DEFAULT_KIND_VERSION}"
-    local config="$PLUGIN_CONFIG"
+    local config="${PLUGIN_CONFIG:-$DEFAULT_CONFIG}"
     local node_image="$PLUGIN_NODE_IMAGE"
     local install_dir="${PLUGIN_INSTALL_DIR:-/usr/local/bin}"
     local cluster_name="${PLUGIN_CLUSTER_NAME:-$DEFAULT_CLUSTER_NAME}"
