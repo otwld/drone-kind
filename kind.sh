@@ -101,8 +101,10 @@ create_kind_cluster() {
 
     "${install_dir}/kind" "${args[@]}"
 
-    echo 'Set hostname to: ${hostname}'
-    sed -i -e "s/0.0.0.0/${hostname}/g" "$HOME/.kube/config"
+    echo "Set hostname to: ${hostname}"
+    sed -i -e "s/127.0.0.1/${hostname}/g" "${HOME}/.kube/config"
+    sed -i -e "s/localhost/${hostname}/g" "${HOME}/.kube/config"
+    sed -i -e "s/0.0.0.0/${hostname}/g" "${HOME}/.kube/config"
 }
 
 delete_cluster() {
